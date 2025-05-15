@@ -1,0 +1,47 @@
+package dev.admin.api_request_log.entity;
+
+import dev.admin.global.entity.BaseTimeEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ApiRequestLog extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false, length = 10)
+    private String method;
+
+    @Column(nullable = false, length = 255)
+    private String endpoint;
+
+    @Column(columnDefinition = "TEXT")
+    private String queryParams;
+
+    @Column(columnDefinition = "TEXT")
+    private String requestBody;
+
+    @Column(nullable = false)
+    private Integer responseStatus;
+
+    @Column(nullable = false)
+    private Integer responseTimeMs;
+
+    @Column(nullable = false)
+    private String timestamp;
+
+    @Column(nullable = false, length = 45)
+    private String ipAddress;
+}
