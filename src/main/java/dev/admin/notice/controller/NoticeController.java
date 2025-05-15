@@ -23,12 +23,13 @@ public class NoticeController {
     private final NoticeQueryService noticeQueryService;
 
     @GetMapping
-    @Operation(summary = "공지사항 목록(전체) 조회", description = "공지사항 전체 목록을 조회하는 API입니다.")
-    public ApiResponse<Page<NoticeResponseDto>> getNotices(
-            @RequestParam(defaultValue = "0") int page
+    public Page<NoticeResponseDto> getNotices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "") String keyword // ✅ 검색 키워드
     ) {
-        return ApiResponse.onSuccess(noticeQueryService.getNotices(page));
+        return noticeQueryService.getNotices(page, keyword);
     }
+
 
     @GetMapping("/{noticeId}")
     @Operation(summary = "공지사항 상세 조회", description = "공지사항 상세를 조회하는 API입니다.")
