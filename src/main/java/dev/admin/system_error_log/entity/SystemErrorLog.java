@@ -1,8 +1,11 @@
 package dev.admin.system_error_log.entity;
 
-import jakarta.persistence.*;
 import dev.admin.global.entity.BaseTimeEntity;
+import dev.admin.system_error_log.enums.Severity;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,16 +31,16 @@ public class SystemErrorLog extends BaseTimeEntity {
     private String stackTrace;
 
     @Column(nullable = false)
-    private String timestamp;
+    private LocalDateTime timestamp;
 
     @Column(length = 50)
     private String serverName;
+
+    @Column(nullable = false)
+    private String traceId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private Severity severity;
 
-    public enum Severity {
-        INFO, WARN, ERROR, FATAL
-    }
 }
