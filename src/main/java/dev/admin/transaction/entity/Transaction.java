@@ -3,6 +3,8 @@ package dev.admin.transaction.entity;
 
 import dev.admin.global.entity.BaseTimeEntity;
 import dev.admin.transaction.enums.TransactionStatus;
+import dev.admin.transaction.enums.TransactionType;
+import dev.admin.wallet.entity.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
 
