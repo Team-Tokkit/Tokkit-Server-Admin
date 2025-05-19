@@ -22,7 +22,7 @@ public interface ApiRequestLogRepository extends JpaRepository<ApiRequestLog, Lo
     WHERE r.timestamp BETWEEN :start AND :end
       AND (:method IS NULL OR r.method = :method)
       AND (:status IS NULL OR r.responseStatus = :status)
-      AND (:keyword IS NULL OR r.endpoint LIKE %:keyword%)
+      AND (:keyword IS NULL OR r.endpoint LIKE CONCAT('%', :keyword, '%'))
     GROUP BY r.method, r.endpoint
 """)
     List<ApiRequestLogChartResponseDto> findGroupedStats(
@@ -34,14 +34,14 @@ public interface ApiRequestLogRepository extends JpaRepository<ApiRequestLog, Lo
     );
 
     @Query("""
-        SELECT r
-        FROM ApiRequestLog r
-        WHERE r.timestamp BETWEEN :start AND :end
-          AND (:method IS NULL OR r.method = :method)
-          AND (:status IS NULL OR r.responseStatus = :status)
-          AND (:keyword IS NULL OR r.endpoint LIKE %:keyword%)
-        ORDER BY r.timestamp DESC
-    """)
+    SELECT r
+    FROM ApiRequestLog r
+    WHERE r.timestamp BETWEEN :start AND :end
+      AND (:method IS NULL OR r.method = :method)
+      AND (:status IS NULL OR r.responseStatus = :status)
+      AND (:keyword IS NULL OR r.endpoint LIKE CONCAT('%', :keyword, '%'))
+    ORDER BY r.timestamp DESC
+""")
     Page<ApiRequestLog> findAllWithFilters(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
