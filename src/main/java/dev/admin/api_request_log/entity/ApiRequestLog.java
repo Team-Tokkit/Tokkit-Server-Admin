@@ -3,9 +3,11 @@ package dev.admin.api_request_log.entity;
 import dev.admin.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Builder;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -40,8 +42,11 @@ public class ApiRequestLog extends BaseTimeEntity {
     private Integer responseTimeMs;
 
     @Column(nullable = false)
-    private String timestamp;
+    private LocalDateTime timestamp;
 
     @Column(nullable = false, length = 45)
     private String ipAddress;
+
+    @Column(nullable = false)
+    private String traceId;
 }

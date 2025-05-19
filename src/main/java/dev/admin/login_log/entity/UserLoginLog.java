@@ -1,4 +1,4 @@
-package dev.admin.user_login_log.entity;
+package dev.admin.login_log.entity;
 
 import dev.admin.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
