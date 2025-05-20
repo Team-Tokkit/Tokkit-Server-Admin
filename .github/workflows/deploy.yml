@@ -24,4 +24,4 @@ jobs:
             git pull origin develop
             ./gradlew build --no-daemon
             pkill -f 'java -jar' || true
-            nohup java -jar build/libs/*.jar > app.log 2>&1 &
+            nohup java -jar build/libs/*.jar > app.log 2>&1 & disown
