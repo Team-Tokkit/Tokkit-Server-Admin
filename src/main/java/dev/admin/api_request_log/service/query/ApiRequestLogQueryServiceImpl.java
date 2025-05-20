@@ -62,7 +62,7 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
 
     @Override
     public ApiRequestLogDetailResponseDto getLogDetailById(Long id) {
-        if(id == null) {
+        if (id == null) {
             throw new GeneralException(ErrorStatus.API_REQUEST_LOG_NOT_FOUND);
         }
         return ApiRequestLogDetailResponseDto.of(
