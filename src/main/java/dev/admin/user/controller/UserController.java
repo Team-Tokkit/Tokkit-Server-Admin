@@ -47,10 +47,4 @@ public class UserController {
     public ApiResponse<UserDetailResponseDto> getUser(@PathVariable Long userId) {
         return ApiResponse.onSuccess(userQueryService.getUser(userId));
     }
-
-//    @DeleteMapping("/{userId}")
-//    public ApiResponse<Long> deleteUser(@PathVariable Long userId) {
-//        userCommandService.deleteUser(userId);
-//        return ApiResponse.onSuccess(userId);
-//    }
 }
