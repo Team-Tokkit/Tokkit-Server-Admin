@@ -27,8 +27,7 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
         LocalDateTime start = DateTimeUtil.parseStartOfDay(startDate);
         LocalDateTime end = DateTimeUtil.parseEndOfDay(endDate);
         DateTimeUtil.validateStartBeforeEnd(start, end);
-
-        return logRepository.findGroupedStats(start, end, method, status, keyword);
+        return logRepository.findGroupedStats(start, end, method, status / 100, keyword);
     }
 
     @Override
@@ -39,8 +38,8 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
         LocalDateTime start = DateTimeUtil.parseStartOfDay(startDate);
         LocalDateTime end = DateTimeUtil.parseEndOfDay(endDate);
         DateTimeUtil.validateStartBeforeEnd(start, end);
-
-        var page = logRepository.findAllWithFilters(start, end, method, status, keyword, pageable)
+        System.out.println("------------------------------"+status / 100);
+        var page = logRepository.findAllWithFilters(start, end, method, status / 100, keyword, pageable)
                 .map(log -> new ApiRequestLogPageItemDto(
                         log.getId(),
                         log.getEndpoint(),
@@ -56,7 +55,7 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
 
     @Override
     public ApiRequestLogDetailResponseDto getLogDetailById(Long id) {
-        if(id == null) {
+        if (id == null) {
             throw new GeneralException(ErrorStatus.API_REQUEST_LOG_NOT_FOUND);
         }
         return ApiRequestLogDetailResponseDto.of(

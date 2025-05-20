@@ -36,8 +36,14 @@ public class SwaggerConfig {
                 .addList("refreshTokenAuth");
 
 
-        Server localServer = new Server();
-        localServer.setUrl("http://localhost:8080");
+        Server defaultServer = new Server()
+                .url("http://35.216.99.149:8080")
+                .description("Default GCP server");
+
+        // 로컬 서버는 선택만 가능하게
+        Server localServer = new Server()
+                .url("http://localhost:8080")
+                .description("Local development server");
 
         return new OpenAPI()
                 .components(new Components()
