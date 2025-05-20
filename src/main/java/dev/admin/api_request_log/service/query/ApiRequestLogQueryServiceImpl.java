@@ -28,6 +28,9 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
         LocalDateTime end = DateTimeUtil.parseEndOfDay(endDate);
         DateTimeUtil.validateStartBeforeEnd(start, end);
 
+        if (status != null) {
+            status = status / 100;
+        }
         return logRepository.findGroupedStats(start, end, method, status, keyword);
     }
 
@@ -40,6 +43,9 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
         LocalDateTime end = DateTimeUtil.parseEndOfDay(endDate);
         DateTimeUtil.validateStartBeforeEnd(start, end);
 
+        if (status != null) {
+            status = status / 100;
+        }
         var page = logRepository.findAllWithFilters(start, end, method, status, keyword, pageable)
                 .map(log -> new ApiRequestLogPageItemDto(
                         log.getId(),
