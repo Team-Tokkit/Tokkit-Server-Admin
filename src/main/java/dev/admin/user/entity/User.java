@@ -36,5 +36,12 @@ public class User extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Wallet wallet;
-
+    public void update(String name, String simplePassword, String phoneNumber) {
+        this.name = name;
+        this.simplePassword = simplePassword;
+        this.phoneNumber = phoneNumber;
+    }
+    public void changeStatus(boolean status) {
+        this.isDormant = status;
+    }
 }
