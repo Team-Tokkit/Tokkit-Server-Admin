@@ -20,6 +20,7 @@ public class UserCommandServiceImpl implements UserCommandService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
         user.update(dto.name(), dto.simplePassword(), dto.phone());
+        userRepository.save(user);
     }
 
     @Override
@@ -27,10 +28,7 @@ public class UserCommandServiceImpl implements UserCommandService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
         user.changeStatus(dto.isDormant());
+        userRepository.save(user);
     }
 
-//    @Override
-//    public void deleteUser(Long userId) {
-//        userRepository.deleteById(userId);
-//    }
 }
