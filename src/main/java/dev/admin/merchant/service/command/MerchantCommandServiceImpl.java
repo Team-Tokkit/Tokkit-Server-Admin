@@ -2,11 +2,13 @@ package dev.admin.merchant.service.command;
 
 import dev.admin.global.apiPayload.code.status.ErrorStatus;
 import dev.admin.global.apiPayload.exception.GeneralException;
+import dev.admin.global.util.PasswordUtil;
 import dev.admin.merchant.dto.request.UpdateMerchantRequestDto;
 import dev.admin.merchant.dto.request.UpdateMerchantStatusRequestDto;
 import dev.admin.merchant.entity.Merchant;
 import dev.admin.merchant.repository.MerchantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,22 +16,21 @@ import org.springframework.stereotype.Service;
 public class MerchantCommandServiceImpl implements MerchantCommandService {
 
     private final MerchantRepository merchantRepository;
-
     @Override
-    public void updateMerchant(Long merchantId, UpdateMerchantRequestDto requestDto) {
+    public void updateMerchant(Long merchantId, UpdateMerchantRequestDto dto) {
         Merchant merchant = merchantRepository.findById(merchantId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MERCHANT_NOT_FOUND));
-
-        merchant.update(requestDto.name(), requestDto.contact(), requestDto.simplePassword());
+        String encodedPassword = PasswordUtil.encode(dto.simplePassword());
+        merchant.update(dto.name(), dto.contact(), encodedPassword);
         merchantRepository.save(merchant);
     }
 
     @Override
-    public void updateMerchantStatus(Long merchantId, UpdateMerchantStatusRequestDto requestDto) {
+    public void updateMerchantStatus(Long merchantId, UpdateMerchantStatusRequestDto dto) {
         Merchant merchant = merchantRepository.findById(merchantId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MERCHANT_NOT_FOUND));
 
-        merchant.changeStatus(requestDto.isDormant());
+        merchant.changeStatus(dto.isDormant());
         merchantRepository.save(merchant);
     }
 }

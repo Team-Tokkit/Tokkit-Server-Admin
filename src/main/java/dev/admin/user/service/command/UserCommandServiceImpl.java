@@ -2,6 +2,7 @@ package dev.admin.user.service.command;
 
 import dev.admin.global.apiPayload.code.status.ErrorStatus;
 import dev.admin.global.apiPayload.exception.GeneralException;
+import dev.admin.global.util.PasswordUtil;
 import dev.admin.user.entity.User;
 import dev.admin.user.dto.request.UpdateUserRequestDto;
 import dev.admin.user.dto.request.UpdateUserStatusRequestDto;
@@ -14,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class UserCommandServiceImpl implements UserCommandService {
 
     private final UserRepository userRepository;
-
     @Override
     public void updateUser(Long userId, UpdateUserRequestDto dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
-        user.update(dto.name(), dto.simplePassword(), dto.phone());
+        String encodedPassword = PasswordUtil.encode(dto.simplePassword());
+        user.update(dto.name(), encodedPassword, dto.phone());
         userRepository.save(user);
     }
 
@@ -30,5 +31,4 @@ public class UserCommandServiceImpl implements UserCommandService {
         user.changeStatus(dto.isDormant());
         userRepository.save(user);
     }
-
 }
