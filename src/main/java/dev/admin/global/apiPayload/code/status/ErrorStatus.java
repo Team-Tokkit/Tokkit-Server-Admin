@@ -30,8 +30,10 @@ public enum ErrorStatus implements BaseErrorCode {
 	INVALID_PAGE_NUMBER(HttpStatus.BAD_REQUEST, "PAGE400", "요청한 페이지 번호가 유효하지 않습니다."),
 
 	// Date
-	INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "DATE400", "날짜 형식이 유효하지 않습니다.");
+	INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "DATE400", "날짜 형식이 유효하지 않습니다."),
 
+	// User
+	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404", "사용자를 찾을 수 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String code;
