@@ -1,4 +1,4 @@
-name: Deploy to GCP
+name: Deploy to GCP (Manual Script)
 
 on:
   push:
@@ -10,18 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
-      - name: Deploy to GCP via SSH
+      - name: SSH to GCP and run deploy.sh
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ${{ secrets.APP_DIR }}
-            git pull origin develop
-            ./gradlew build --no-daemon
-            pkill -f 'java -jar' || true
-            nohup java -jar build/libs/*.jar > app.log 2>&1 & disown
+            cd ~/Tokkit/Tokkit-Server-Admin
+            bash ./deploy.sh
