@@ -13,41 +13,42 @@ import java.util.List;
 
 public interface ApiRequestLogRepository extends JpaRepository<ApiRequestLog, Long> {
     @Query("""
-    SELECT new dev.admin.api_request_log.dto.response.ApiRequestLogChartResponseDto(
-        CONCAT(r.method, ' ', r.endpoint),
-        COUNT(r),
-        AVG(r.responseTimeMs)
-    )
-    FROM ApiRequestLog r
-    WHERE r.timestamp BETWEEN :start AND :end
-      AND (:method IS NULL OR r.method = :method)
-      AND (:status IS NULL OR r.responseStatus = :status)
-      AND (:keyword IS NULL OR r.endpoint LIKE CONCAT('%', :keyword, '%'))
-    GROUP BY r.method, r.endpoint
-""")
+            SELECT new dev.admin.api_request_log.dto.response.ApiRequestLogChartResponseDto(
+                CONCAT(r.method, ' ', r.endpoint),
+                COUNT(r),
+                AVG(r.responseTimeMs)
+            )
+            FROM ApiRequestLog r
+            WHERE r.timestamp BETWEEN :start AND :end
+              AND (:method IS NULL OR r.method = :method)
+              AND (:statusDivided IS NULL OR FLOOR(r.responseStatus / 100)= :statusDivided)
+              AND (:keyword IS NULL OR r.endpoint LIKE CONCAT('%', :keyword, '%'))
+            GROUP BY r.method, r.endpoint
+            """)
     List<ApiRequestLogChartResponseDto> findGroupedStats(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("method") String method,
-            @Param("status") Integer status,
+            @Param("statusDivided") Integer statusDivided,
             @Param("keyword") String keyword
     );
 
     @Query("""
-    SELECT r
-    FROM ApiRequestLog r
-    WHERE r.timestamp BETWEEN :start AND :end
-      AND (:method IS NULL OR r.method = :method)
-      AND (:status IS NULL OR r.responseStatus = :status)
-      AND (:keyword IS NULL OR r.endpoint LIKE CONCAT('%', :keyword, '%'))
-    ORDER BY r.timestamp DESC
-""")
+            SELECT r
+            FROM ApiRequestLog r
+            WHERE r.timestamp BETWEEN :start AND :end
+              AND (:method IS NULL OR r.method = :method)
+              AND (:statusDivided IS NULL OR FLOOR(r.responseStatus / 100) = :statusDivided)
+              AND (:keyword IS NULL OR r.endpoint LIKE CONCAT('%', :keyword, '%'))
+            ORDER BY r.timestamp DESC
+            """)
     Page<ApiRequestLog> findAllWithFilters(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("method") String method,
-            @Param("status") Integer status,
+            @Param("statusDivided") Integer statusDivided,
             @Param("keyword") String keyword,
             Pageable pageable
     );
+
 }
