@@ -25,7 +25,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE404", "공지사항을 찾을 수 없습니다."),
 
 	// Logging
-	API_REQUEST_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "API_REQUEST_LOG404", "API 요청 로그를 찾을 수 없습니다."),
+	API_REQUEST_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "API_REQUEST_LOG_404", "API 요청 로그를 찾을 수 없습니다."),
 	// Page
 	INVALID_PAGE_NUMBER(HttpStatus.BAD_REQUEST, "PAGE400", "요청한 페이지 번호가 유효하지 않습니다."),
 
@@ -34,7 +34,16 @@ public enum ErrorStatus implements BaseErrorCode {
 
 	// User
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404", "사용자를 찾을 수 없습니다."),
-	MERCHANT_NOT_FOUND(HttpStatus.NOT_FOUND, "MERCHANT404" , "가맹점주를 찾을 수 없습니다." );
+
+	// Merchant
+	MERCHANT_NOT_FOUND(HttpStatus.NOT_FOUND, "MERCHANT404", "가맹점주를 찾을 수 없습니다."),
+
+	//SystemErrorLog
+	SYSTEM_ERROR_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "SYSTEM_ERROR_404", "시스템 에러로그를 찾을 수 없습니다"),
+	// Transaction
+	TRANSACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "TRANSACTION_404", "트랜잭션을 찾을 수 없습니다"),
+	// LOGIN LOG
+	LOGIN_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "LOGIN_LOG_404","로그인 로그를 찾을 수 없습니다" );
 
 	private final HttpStatus httpStatus;
 	private final String code;
@@ -60,4 +69,4 @@ public enum ErrorStatus implements BaseErrorCode {
 				.httpStatus(httpStatus)
 				.build();
 	}
-	}
+}

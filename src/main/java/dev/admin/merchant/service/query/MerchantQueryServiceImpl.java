@@ -26,7 +26,7 @@ public class MerchantQueryServiceImpl implements MerchantQueryService {
     public MerchantDetailResponseDto getMerchant(Long merchantId) {
         Merchant merchant = merchantRepository.findById(merchantId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MERCHANT_NOT_FOUND));
-
+        System.out.println("merchant = " + merchant);
         return MerchantDetailResponseDto.from(merchant);
     }
 }
