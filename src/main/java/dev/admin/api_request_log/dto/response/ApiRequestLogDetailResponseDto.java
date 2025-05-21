@@ -25,6 +25,9 @@ public record ApiRequestLogDetailResponseDto(
         @Schema(description = "요청한 사용자 ID", example = "2")
         Long userId,
 
+        @Schema(description = "요청한 가맹점주 ID", example = "2")
+        Long merchantId,
+
         @Schema(description = "요청자 IP 주소", example = "192.168.0.1")
         String ipAddress,
 
@@ -51,6 +54,7 @@ public record ApiRequestLogDetailResponseDto(
                         log.getEndpoint(),
                         log.getResponseStatus(),
                         log.getUserId(),
+                        log.getMerchantId(),
                         log.getIpAddress(),
                         log.getRequestBody(),
                         log.getQueryParams(),

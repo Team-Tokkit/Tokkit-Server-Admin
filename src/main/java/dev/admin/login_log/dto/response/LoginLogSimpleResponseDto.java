@@ -9,6 +9,7 @@ public record LoginLogSimpleResponseDto(
         Long id,
         Long userId,
         Long merchantId,
+        String ipAddress,
         Event event,
         Boolean success,
         LocalDateTime timestamp
@@ -18,6 +19,7 @@ public record LoginLogSimpleResponseDto(
                 log.getId(),
                 log.getUserId(),
                 log.getMerchantId(),
+                log.getIpAddress(),
                 log.getEvent(),
                 log.getSuccess(),
                 log.getTimestamp()
