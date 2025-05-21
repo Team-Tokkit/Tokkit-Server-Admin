@@ -1,4 +1,8 @@
 package dev.admin.voucher.dto.request;
 
-public class VoucherSearchRequest {
-}
+import dev.admin.store.enums.StoreCategory;
+
+public record VoucherSearchRequest(
+        StoreCategory storeCategory,
+        String searchKeyword
+) {}
