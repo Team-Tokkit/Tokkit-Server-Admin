@@ -45,5 +45,4 @@ public class SystemErrorLog extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private Severity severity;
-
 }
