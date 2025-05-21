@@ -40,7 +40,5 @@ public class Store extends BaseTimeEntity {
     @JoinColumn(name = "merchant_id", unique = true)
     private Merchant merchant;
 
-    @Column(columnDefinition = "POINT", nullable = false)
-    private Point location;
 }
 
