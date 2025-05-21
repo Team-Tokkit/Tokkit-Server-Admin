@@ -1,4 +1,4 @@
 package dev.admin.voucher.dto.request;
 
-public record CreateVoucherRequestDto() {
+public class CreateVoucherRequestDto {
 }
