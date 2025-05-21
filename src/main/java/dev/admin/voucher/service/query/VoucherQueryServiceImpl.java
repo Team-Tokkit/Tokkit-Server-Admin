@@ -1,7 +1,10 @@
 package dev.admin.voucher.service.query;
 
+import dev.admin.global.apiPayload.code.status.ErrorStatus;
 import dev.admin.global.apiPayload.exception.GeneralException;
+import dev.admin.store.dto.response.StoreListResponseDto;
 import dev.admin.voucher.dto.request.VoucherSearchRequest;
+import dev.admin.voucher.dto.response.VoucherResponseDto;
 import dev.admin.voucher.dto.response.VoucherSimpleResponseDto;
 import dev.admin.voucher.entity.Voucher;
 import dev.admin.voucher.repository.VoucherRepository;
@@ -24,6 +27,20 @@ public class VoucherQueryServiceImpl implements VoucherQueryService {
         Page<Voucher> vouchers = voucherRepository.searchVouchers(request, pageable);
 
         return vouchers.map(voucher -> VoucherSimpleResponseDto.from(voucher, imageProxyBaseUrl));
+    }
+
+    /**
+     * [2] 바우처 상세 조회
+     */
+    public VoucherResponseDto getVoucherDetail(Long id, Pageable pageable) {
+        Voucher voucher = voucherRepository.findById(id)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.VOUCHER_NOT_FOUND));
+
+        Pageable limitedPageable = Pageable.ofSize(5);
+
+        Page<StoreListResponseDto> stores = voucherRepository.findStoresByVoucherId(id, limitedPageable);
+
+        return VoucherResponseDto.from(voucher, stores, imageProxyBaseUrl);
     }
 
 }

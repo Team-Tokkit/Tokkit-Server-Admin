@@ -24,6 +24,9 @@ public enum ErrorStatus implements BaseErrorCode {
 	// Notice
 	NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE404", "공지사항을 찾을 수 없습니다."),
 
+	// Voucher
+	VOUCHER_NOT_FOUND(HttpStatus.NOT_FOUND, "VOUCHER404", "바우처를 찾을 수 없습니다."),
+
 	// Logging
 	API_REQUEST_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "API_REQUEST_LOG_404", "API 요청 로그를 찾을 수 없습니다."),
 	// Page
@@ -44,6 +47,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	TRANSACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "TRANSACTION_404", "트랜잭션을 찾을 수 없습니다"),
 	// LOGIN LOG
 	LOGIN_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "LOGIN_LOG_404","로그인 로그를 찾을 수 없습니다" );
+
 
 	private final HttpStatus httpStatus;
 	private final String code;

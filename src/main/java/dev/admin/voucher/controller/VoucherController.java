@@ -3,6 +3,7 @@ package dev.admin.voucher.controller;
 import dev.admin.global.apiPayload.ApiResponse;
 import dev.admin.voucher.dto.request.CreateVoucherRequestDto;
 import dev.admin.voucher.dto.request.VoucherSearchRequest;
+import dev.admin.voucher.dto.response.VoucherResponseDto;
 import dev.admin.voucher.dto.response.VoucherSimpleResponseDto;
 import dev.admin.voucher.service.command.VoucherCommandService;
 import dev.admin.voucher.service.query.VoucherQueryService;
@@ -31,5 +32,14 @@ public class VoucherController {
     @Operation(summary = "전체 바우처 조회 및 필터링/검색", description = "카테고리, 키워드로 바우처 목록을 조회합니다.")
     public ApiResponse<Page<VoucherSimpleResponseDto>> getVouchers(@ModelAttribute VoucherSearchRequest request, Pageable pageable) {
         return ApiResponse.onSuccess(voucherQueryService.searchVouchers(request, pageable));
+    }
+
+    @GetMapping("/{voucherId}")
+    @Operation(summary = "바우처 상세 조회", description = "바우처의 상세 정보 및 사용처(스토어)를 조회합니다.")
+    public ApiResponse<VoucherResponseDto> getVoucherDetail(
+            @PathVariable Long voucherId,
+            Pageable pageable
+    ) {
+        return ApiResponse.onSuccess(voucherQueryService.getVoucherDetail(voucherId, pageable));
     }
 }
