@@ -43,4 +43,11 @@ public class VoucherQueryServiceImpl implements VoucherQueryService {
         return VoucherResponseDto.from(voucher, stores, imageProxyBaseUrl);
     }
 
+    /**
+     * [3] 바우처 전체 사용처 조회
+     */
+    public Page<StoreListResponseDto> getAllStoresByVoucherId(Long id, Pageable pageable) {
+        return voucherRepository.findStoresByVoucherId(id, pageable);
+    }
+
 }
