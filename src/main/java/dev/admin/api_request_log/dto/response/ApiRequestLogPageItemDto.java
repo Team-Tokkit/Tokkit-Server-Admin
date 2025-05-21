@@ -9,5 +9,6 @@ public record ApiRequestLogPageItemDto(
         int status,
         int responseTime,
         Long userId,
+        Long merchantId,
         LocalDateTime timestamp
 ) {}

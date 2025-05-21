@@ -54,6 +54,7 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
                         log.getResponseStatus(),
                         log.getResponseTimeMs(),
                         log.getUserId(),
+                        log.getMerchantId(),
                         log.getTimestamp()
                 ));
 
