@@ -41,8 +41,6 @@ public class Merchant extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "merchant")
     private Wallet wallet;
 
-    @OneToOne(mappedBy = "merchant")
-    private Store store;
 
     public void update(String name, String simplePassword , String phoneNumber) {
         this.name = name;

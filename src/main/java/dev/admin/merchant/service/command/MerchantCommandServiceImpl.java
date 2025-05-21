@@ -8,7 +8,6 @@ import dev.admin.merchant.dto.request.UpdateMerchantStatusRequestDto;
 import dev.admin.merchant.entity.Merchant;
 import dev.admin.merchant.repository.MerchantRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,12 +15,16 @@ import org.springframework.stereotype.Service;
 public class MerchantCommandServiceImpl implements MerchantCommandService {
 
     private final MerchantRepository merchantRepository;
+
     @Override
     public void updateMerchant(Long merchantId, UpdateMerchantRequestDto dto) {
         Merchant merchant = merchantRepository.findById(merchantId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MERCHANT_NOT_FOUND));
-        String encodedPassword = PasswordUtil.encode(dto.simplePassword());
-        merchant.update(dto.name(), dto.contact(), encodedPassword);
+        String encodedPassword = null;
+        if (dto.simplePassword() != null && !dto.simplePassword().isBlank()) {
+            encodedPassword = PasswordUtil.encode(dto.simplePassword());
+        }
+        merchant.update(dto.name(), dto.phoneNumber(), encodedPassword != null ? encodedPassword : merchant.getSimplePassword());
         merchantRepository.save(merchant);
     }
 

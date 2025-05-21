@@ -19,8 +19,16 @@ public class UserCommandServiceImpl implements UserCommandService {
     public void updateUser(Long userId, UpdateUserRequestDto dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
-        String encodedPassword = PasswordUtil.encode(dto.simplePassword());
-        user.update(dto.name(), encodedPassword, dto.phone());
+
+        String encodedPassword = null;
+        if (dto.simplePassword() != null && !dto.simplePassword().isBlank()) {
+            encodedPassword = PasswordUtil.encode(dto.simplePassword());
+        }
+        user.update(
+                dto.name(),
+                encodedPassword != null ? encodedPassword : user.getSimplePassword(),
+                dto.phone()
+        );
         userRepository.save(user);
     }
 
