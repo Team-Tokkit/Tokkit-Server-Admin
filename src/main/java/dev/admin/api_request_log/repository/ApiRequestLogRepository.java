@@ -21,9 +21,10 @@ public interface ApiRequestLogRepository extends JpaRepository<ApiRequestLog, Lo
             FROM ApiRequestLog r
             WHERE r.timestamp BETWEEN :start AND :end
               AND (:method IS NULL OR r.method = :method)
-              AND (:statusDivided IS NULL OR FLOOR(r.responseStatus / 100)= :statusDivided)
+              AND (:statusDivided IS NULL OR FLOOR(r.responseStatus / 100) = :statusDivided)
               AND (:keyword IS NULL OR r.endpoint LIKE CONCAT('%', :keyword, '%'))
             GROUP BY r.method, r.endpoint
+            ORDER BY AVG(r.responseTimeMs) DESC
             """)
     List<ApiRequestLogChartResponseDto> findGroupedStats(
             @Param("start") LocalDateTime start,
@@ -32,6 +33,7 @@ public interface ApiRequestLogRepository extends JpaRepository<ApiRequestLog, Lo
             @Param("statusDivided") Integer statusDivided,
             @Param("keyword") String keyword
     );
+
 
     @Query("""
             SELECT r

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record SystemErrorLogResponseDto(
         Long id,
         Long userId,
+        Long merchantId,
         String endpoint,
         String errorMessage,
         String stackTrace,
@@ -20,6 +21,7 @@ public record SystemErrorLogResponseDto(
         return new SystemErrorLogResponseDto(
                 log.getId(),
                 log.getUserId(),
+                log.getMerchantId(),
                 log.getEndpoint(),
                 log.getErrorMessage(),
                 log.getStackTrace(),
