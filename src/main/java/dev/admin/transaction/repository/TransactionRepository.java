@@ -11,11 +11,12 @@ import org.springframework.data.repository.query.Param;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
     @Query("""
-    SELECT t FROM Transaction t
-    WHERE (:type IS NULL OR t.type = :type)
-      AND (:status IS NULL OR t.status = :status)
-      AND (:walletId IS NULL OR t.wallet.id = :walletId)
-    """)
+            SELECT t FROM Transaction t
+            WHERE (:type IS NULL OR t.type = :type)
+              AND (:status IS NULL OR t.status = :status)
+              AND (:walletId IS NULL OR t.wallet.id = :walletId)
+                     ORDER BY t.createdAt DESC
+            """)
     Page<Transaction> searchByCondition(@Param("type") TransactionType type,
                                         @Param("status") TransactionStatus status,
                                         @Param("walletId") Long walletId,
