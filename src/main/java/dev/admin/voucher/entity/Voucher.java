@@ -3,6 +3,7 @@ package dev.admin.voucher.entity;
 import dev.admin.global.entity.BaseTimeEntity;
 import dev.admin.global.entity.VoucherImage;
 import dev.admin.global.entity.VoucherStore;
+import dev.admin.merchant.entity.Merchant;
 import dev.admin.store.enums.StoreCategory;
 import lombok.*;
 import jakarta.persistence.*;
@@ -55,9 +56,36 @@ public class Voucher extends BaseTimeEntity {
     @OneToMany(mappedBy = "voucher", cascade = CascadeType.ALL)
     private List<VoucherStore> voucherStores = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "merchant_id" , nullable = true)
+    private Merchant merchant;
+
     @Enumerated(EnumType.STRING)
     private StoreCategory storeCategory;
 
     @OneToOne(mappedBy = "voucher", cascade = CascadeType.ALL)
     private VoucherImage image;
+
+    public void setImage(VoucherImage image) {
+        this.image = image;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDetailDescription(String detailDescription) {
+        this.detailDescription = detailDescription;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+
+
 }
