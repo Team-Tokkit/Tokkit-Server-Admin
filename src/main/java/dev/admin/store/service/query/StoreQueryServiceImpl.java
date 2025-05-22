@@ -1,7 +1,7 @@
 package dev.admin.store.service.query;
 
+import dev.admin.store.dto.request.StoreSearchRequestDto;
 import dev.admin.store.dto.response.StoreListResponseDto;
-import dev.admin.store.entity.Store;
 import dev.admin.store.repository.StoreRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,7 @@ public class StoreQueryServiceImpl implements StoreQueryService {
 
     @Override
     @Transactional
-    public Page<StoreListResponseDto> getAllStores(Pageable pageable) {
-        return storeRepository.findAll(pageable)
-                .map(StoreListResponseDto::from);
+    public Page<StoreListResponseDto> searchStores(StoreSearchRequestDto request, Pageable pageable) {
+        return storeRepository.searchStores(request, pageable);
     }
 }
