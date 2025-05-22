@@ -36,6 +36,14 @@ public class VoucherCustomRepositoryImpl implements VoucherCustomRepository {
             jpql.append(" AND LOWER(v.name) LIKE LOWER(CONCAT('%', :keyword, '%'))");
         }
 
+        if (request.sortByValidDate() != null) {
+            if (request.sortByValidDate().equalsIgnoreCase("asc")) {
+                jpql.append(" ORDER BY v.validDate ASC");
+            } else if (request.sortByValidDate().equalsIgnoreCase("desc")) {
+                jpql.append(" ORDER BY v.validDate DESC");
+            }
+        }
+
         TypedQuery<Long> countQuery = em.createQuery(countJpql.toString(), Long.class);
         TypedQuery<Voucher> query = em.createQuery(jpql.toString(), Voucher.class);
 
