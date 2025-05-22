@@ -10,10 +10,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface SystemErrorLogRepository extends JpaRepository<SystemErrorLog, Long> {
     @Query("""
-        SELECT l FROM SystemErrorLog l
-        WHERE (:keyword IS NULL OR l.endpoint LIKE %:keyword%)
-          AND (:severity IS NULL OR l.severity = :severity)
-        """)
+            SELECT l FROM SystemErrorLog l
+            WHERE (:keyword IS NULL OR l.endpoint LIKE %:keyword%)
+              AND (:severity IS NULL OR l.severity = :severity)
+                         ORDER BY l.createdAt DESC
+            """)
     Page<SystemErrorLog> searchByCondition(@Param("keyword") String keyword,
                                            @Param("severity") Severity severity,
                                            Pageable pageable);

@@ -15,6 +15,7 @@ public interface LoginLogRepository extends JpaRepository<LoginLog, Long> {
           AND (:merchantId IS NULL OR l.merchantId = :merchantId)
           AND (:success IS NULL OR l.success = :success)
           AND (:event IS NULL OR l.event = :event)
+        ORDER BY l.createdAt DESC
     """)
     Page<LoginLog> searchByCondition(@Param("userId") Long userId,
                                      @Param("merchantId") Long merchantId,
