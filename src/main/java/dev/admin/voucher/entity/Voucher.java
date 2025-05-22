@@ -70,4 +70,22 @@ public class Voucher extends BaseTimeEntity {
         this.image = image;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDetailDescription(String detailDescription) {
+        this.detailDescription = detailDescription;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+
+
 }
