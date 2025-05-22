@@ -20,18 +20,14 @@ public class VoucherQueryServiceImpl implements VoucherQueryService {
     private final VoucherRepository voucherRepository;
     private final String imageProxyBaseUrl;
 
-    /**
-     * [1] 바우처 목록 조회 - 검색 + 필터 + 정렬 포함
-     */
+    // 바우처 목록 조회 (카테고리 필터링, 검색)
     public Page<VoucherSimpleResponseDto> searchVouchers(VoucherSearchRequest request, Pageable pageable) {
         Page<Voucher> vouchers = voucherRepository.searchVouchers(request, pageable);
 
         return vouchers.map(voucher -> VoucherSimpleResponseDto.from(voucher, imageProxyBaseUrl));
     }
 
-    /**
-     * [2] 바우처 상세 조회
-     */
+    // 바우처 상세 조회
     public VoucherResponseDto getVoucherDetail(Long id, Pageable pageable) {
         Voucher voucher = voucherRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.VOUCHER_NOT_FOUND));
@@ -43,9 +39,7 @@ public class VoucherQueryServiceImpl implements VoucherQueryService {
         return VoucherResponseDto.from(voucher, stores, imageProxyBaseUrl);
     }
 
-    /**
-     * [3] 바우처 전체 사용처 조회
-     */
+    // 바우처 전체 조회
     public Page<StoreListResponseDto> getAllStoresByVoucherId(Long id, Pageable pageable) {
         return voucherRepository.findStoresByVoucherId(id, pageable);
     }

@@ -2,7 +2,6 @@ package dev.admin.voucher.repository;
 
 import dev.admin.global.entity.VoucherStore;
 import dev.admin.store.dto.response.StoreListResponseDto;
-import dev.admin.store.entity.Store;
 import dev.admin.voucher.dto.request.VoucherSearchRequest;
 import dev.admin.voucher.entity.Voucher;
 import jakarta.persistence.EntityManager;
@@ -62,7 +61,6 @@ public class VoucherCustomRepositoryImpl implements VoucherCustomRepository {
 
     @Override
     public Page<StoreListResponseDto> findStoresByVoucherId(Long voucherId, Pageable pageable) {
-        // 1. 먼저 VoucherStore 기준으로 페이징
         TypedQuery<VoucherStore> query = em.createQuery(
                 "SELECT vs FROM VoucherStore vs JOIN FETCH vs.store WHERE vs.voucher.id = :voucherId",
                 VoucherStore.class
@@ -74,12 +72,10 @@ public class VoucherCustomRepositoryImpl implements VoucherCustomRepository {
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
-        // 2. Store 추출 후 DTO 매핑
         List<StoreListResponseDto> dtoList = voucherStores.stream()
                 .map(vs -> StoreListResponseDto.from(vs.getStore()))
                 .toList();
 
-        // 3. Count 쿼리
         TypedQuery<Long> countQuery = em.createQuery(
                 "SELECT COUNT(vs) FROM VoucherStore vs WHERE vs.voucher.id = :voucherId",
                 Long.class

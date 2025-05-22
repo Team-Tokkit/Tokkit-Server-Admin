@@ -4,8 +4,6 @@ import dev.admin.global.apiPayload.code.status.ErrorStatus;
 import dev.admin.global.apiPayload.exception.GeneralException;
 import dev.admin.global.entity.VoucherImage;
 import dev.admin.global.entity.VoucherStore;
-import dev.admin.global.repository.VoucherImageRepository;
-import dev.admin.global.repository.VoucherStoreRepository;
 import dev.admin.store.entity.Store;
 import dev.admin.store.repository.StoreRepository;
 import dev.admin.voucher.dto.request.CreateVoucherRequestDto;
@@ -23,17 +21,15 @@ import java.util.List;
 public class VoucherCommandServiceImpl implements VoucherCommandService {
 
     private final VoucherRepository voucherRepository;
-    private final VoucherImageRepository voucherImageRepository;
     private final StoreRepository storeRepository;
 
+    // 바우처 생성
     @Override
     @Transactional
     public void createVoucher(CreateVoucherRequestDto requestDto) {
 
-        // 1. Voucher 엔티티로 반환
         Voucher voucher = requestDto.toEntity();
 
-        // 2. 선택된 Store들 조회 후 VoucherStore 생성
         List<Store> stores = storeRepository.findAllById(requestDto.storeIds());
         for (Store store : stores) {
             VoucherStore voucherStore = VoucherStore.builder()
@@ -43,15 +39,13 @@ public class VoucherCommandServiceImpl implements VoucherCommandService {
             voucher.getVoucherStores().add(voucherStore);
         }
 
-        // 3. 이미지 저장
         VoucherImage voucherImage = requestDto.toVoucherImage(voucher);
         voucher.setImage(voucherImage);
 
-        // 4. Voucher 엔티티 저장
         voucherRepository.save(voucher);
     }
 
-    // 바우처 삭제하기
+    // 바우처 삭제
     @Override
     @Transactional
     public void deleteVoucher(Long voucherId) {
@@ -61,7 +55,7 @@ public class VoucherCommandServiceImpl implements VoucherCommandService {
         voucherRepository.deleteById(voucherId);
     }
 
-    // 바우처 수정하기
+    // 바우처 수정
     @Override
     @Transactional
     public void updateVoucher(Long voucherId, UpdateVoucherRequestDto updateDto) {

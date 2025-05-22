@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long> {
-    // 스토어 전체 조회
     Page<Store> findAll(Pageable pageable);
 }
