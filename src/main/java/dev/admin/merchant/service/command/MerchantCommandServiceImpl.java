@@ -24,7 +24,7 @@ public class MerchantCommandServiceImpl implements MerchantCommandService {
         if (dto.simplePassword() != null && !dto.simplePassword().isBlank()) {
             encodedPassword = PasswordUtil.encode(dto.simplePassword());
         }
-        merchant.update(dto.name(), dto.phoneNumber(), encodedPassword != null ? encodedPassword : merchant.getSimplePassword());
+        merchant.update(dto.name(), encodedPassword != null ? encodedPassword : merchant.getSimplePassword(), dto.phoneNumber());
         merchantRepository.save(merchant);
     }
 
