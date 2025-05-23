@@ -40,8 +40,8 @@ public class VoucherQueryServiceImpl implements VoucherQueryService {
     }
 
     // 바우처 전체 조회
-    public Page<StoreListResponseDto> getAllStoresByVoucherId(Long id, Pageable pageable) {
-        return voucherRepository.findStoresByVoucherId(id, pageable);
+    public Page<StoreListResponseDto> getAllStoresByVoucherId(Long voucherId, Pageable pageable) {
+        return voucherRepository.findStoresByVoucherId(voucherId, pageable);
     }
 
 }

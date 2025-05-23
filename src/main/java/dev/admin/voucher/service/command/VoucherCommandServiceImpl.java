@@ -52,6 +52,8 @@ public class VoucherCommandServiceImpl implements VoucherCommandService {
         if (!voucherRepository.existsById(voucherId)) {
             throw new GeneralException(ErrorStatus.VOUCHER_NOT_FOUND);
         }
+        voucherRepository.deleteVoucherOwnershipsByVoucherId(voucherId);
+
         voucherRepository.deleteById(voucherId);
     }
 
