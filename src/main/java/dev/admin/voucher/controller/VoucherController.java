@@ -48,8 +48,8 @@ public class VoucherController {
 
     @GetMapping("/details/{voucherId}/stores")
     @Operation(summary = "바우처 사용처 전체 조회", description = "특정 바우처의 사용처 전체 목록을 조회합니다.")
-    public ApiResponse<Page<StoreListResponseDto>> getAllStoresByVoucherId(@PathVariable Long id, Pageable pageable) {
-        return ApiResponse.onSuccess(voucherQueryService.getAllStoresByVoucherId(id, pageable));
+    public ApiResponse<Page<StoreListResponseDto>> getAllStoresByVoucherId(@PathVariable Long voucherId, Pageable pageable) {
+        return ApiResponse.onSuccess(voucherQueryService.getAllStoresByVoucherId(voucherId, pageable));
     }
 
     @DeleteMapping("/{voucherId}")

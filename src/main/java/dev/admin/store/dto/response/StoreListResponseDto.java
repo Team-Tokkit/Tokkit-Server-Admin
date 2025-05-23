@@ -16,13 +16,13 @@ public record StoreListResponseDto(
         String roadAddress,
 
         @Schema(description = "카테고리", example = "FOOD")
-        StoreCategory storeCategory,
+        StoreCategory storeCategory
 
-        @Schema(description = "가맹점주 이름", example = "김가맹")
-        String merchantName,
-
-        @Schema(description = "가맹점주 연락처", example = "010-1111-2222")
-        String merchantPhone
+//        @Schema(description = "가맹점주 이름", example = "김가맹")
+//        String merchantName,
+//
+//        @Schema(description = "가맹점주 연락처", example = "010-1111-2222")
+//        String merchantPhone
 
 ) {
     public static StoreListResponseDto from(Store store) {
@@ -30,9 +30,9 @@ public record StoreListResponseDto(
                 store.getId(),
                 store.getStoreName(),
                 store.getRoadAddress(),
-                store.getStoreCategory(),
-                store.getMerchant().getName(),
-                store.getMerchant().getPhoneNumber()
+                store.getStoreCategory()
+//                store.getMerchant().getName(),
+//                store.getMerchant().getPhoneNumber()
         );
     }
 }
