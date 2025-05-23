@@ -27,7 +27,7 @@ public class UserCommandServiceImpl implements UserCommandService {
         user.update(
                 dto.name(),
                 encodedPassword != null ? encodedPassword : user.getSimplePassword(),
-                dto.phone()
+                dto.phoneNumber()
         );
         userRepository.save(user);
     }
