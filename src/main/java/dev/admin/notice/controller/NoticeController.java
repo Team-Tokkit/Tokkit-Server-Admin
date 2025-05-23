@@ -23,11 +23,11 @@ public class NoticeController {
     private final NoticeQueryService noticeQueryService;
 
     @GetMapping
-    public Page<NoticeResponseSimpleDto> getNotices(
+    public ApiResponse<Page<NoticeResponseSimpleDto>> getNotices(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "") String keyword
     ) {
-        return noticeQueryService.getNotices(page, keyword);
+        return ApiResponse.onSuccess(noticeQueryService.getNotices(page, keyword));
     }
 
 
