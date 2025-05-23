@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface StoreQueryService {
-//    Page<StoreListResponseDto> getAllStores(Pageable pageable);
         Page<StoreListResponseDto> searchStores(StoreSearchRequestDto request, Pageable pageable);
 
 }

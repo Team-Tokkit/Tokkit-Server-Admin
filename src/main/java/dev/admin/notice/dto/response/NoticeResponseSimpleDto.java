@@ -4,16 +4,16 @@ import dev.admin.notice.entity.Notice;
 
 import java.time.LocalDateTime;
 
-public record NoticeResponseDto(
-         Long id,
-         String title,
-         String content,
-         boolean isDeleted,
-         LocalDateTime createdAt,
-         LocalDateTime updatedAt
+public record NoticeResponseSimpleDto(
+        Long id,
+        String title,
+        String content,
+        boolean isDeleted,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
-    public static NoticeResponseDto from(Notice notice) {
-        return new NoticeResponseDto(
+    public static NoticeResponseSimpleDto from(Notice notice) {
+        return new NoticeResponseSimpleDto(
                 notice.getId(),
                 notice.getTitle(),
                 notice.getContent(),

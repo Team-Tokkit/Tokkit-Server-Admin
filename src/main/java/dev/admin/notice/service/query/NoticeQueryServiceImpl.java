@@ -2,8 +2,9 @@ package dev.admin.notice.service.query;
 
 import dev.admin.global.apiPayload.code.status.ErrorStatus;
 import dev.admin.global.apiPayload.exception.GeneralException;
-import dev.admin.notice.entity.Notice;
 import dev.admin.notice.dto.response.NoticeResponseDto;
+import dev.admin.notice.dto.response.NoticeResponseSimpleDto;
+import dev.admin.notice.entity.Notice;
 import dev.admin.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
 
     private final int SIZE = 7;
 
-    public Page<NoticeResponseDto> getNotices(int page, String keyword) {
+    public Page<NoticeResponseSimpleDto> getNotices(int page, String keyword) {
         if (page < 0) {
             throw new GeneralException(ErrorStatus.INVALID_PAGE_NUMBER);
         }
@@ -27,7 +28,7 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
 
         Page<Notice> notices = noticeRepository.findByTitleContainingIgnoreCase(keyword, pageRequest);
 
-        return notices.map(NoticeResponseDto::from);
+        return notices.map(NoticeResponseSimpleDto::from);
     }
 
     @Override

@@ -3,8 +3,8 @@ package dev.admin.notice.controller;
 import dev.admin.global.apiPayload.ApiResponse;
 import dev.admin.notice.dto.request.NoticeRequestDto;
 import dev.admin.notice.dto.response.NoticeResponseDto;
+import dev.admin.notice.dto.response.NoticeResponseSimpleDto;
 import dev.admin.notice.service.command.NoticeCommandService;
-import dev.admin.notice.service.command.NoticeCommandServiceImpl;
 import dev.admin.notice.service.query.NoticeQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,11 +23,11 @@ public class NoticeController {
     private final NoticeQueryService noticeQueryService;
 
     @GetMapping
-    public Page<NoticeResponseDto> getNotices(
+    public ApiResponse<Page<NoticeResponseSimpleDto>> getNotices(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "") String keyword // ✅ 검색 키워드
+            @RequestParam(defaultValue = "") String keyword
     ) {
-        return noticeQueryService.getNotices(page, keyword);
+        return ApiResponse.onSuccess(noticeQueryService.getNotices(page, keyword));
     }
 
 
@@ -45,15 +45,14 @@ public class NoticeController {
 
     @PutMapping("/{noticeId}")
     @Operation(summary = "공지사항 수정", description = "공지사항을 수정하는 API입니다.")
-    public ApiResponse<Void> updateNotice(@PathVariable Long noticeId, @RequestBody NoticeRequestDto requestDto) {
-        noticeCommandService.updateNotice(noticeId, requestDto);
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<String> updateNotice(@PathVariable Long noticeId, @RequestBody NoticeRequestDto requestDto) {
+        return ApiResponse.onSuccess(noticeCommandService.updateNotice(noticeId, requestDto));
     }
 
-    @PostMapping("/{noticeId}")
-    @Operation(summary = "공지사항 삭제", description = "공지사항을 삭제하는 API입니다.")
-    public ApiResponse<Void> deleteNotice(@PathVariable Long noticeId) {
-        noticeCommandService.deleteNotice(noticeId);
-        return ApiResponse.onSuccess(null);
+    @PatchMapping("/{noticeId}/status")
+    @Operation(summary = "공지사항 상태 변경", description = "공지사항을 삭제하고 롤백하는 API입니다.")
+    public ApiResponse<String> deleteNotice(@PathVariable Long noticeId,
+                                            @RequestParam(defaultValue = "false") boolean isDeleted) {
+        return ApiResponse.onSuccess(noticeCommandService.updateNoticeStatus(noticeId, isDeleted));
     }
 }
