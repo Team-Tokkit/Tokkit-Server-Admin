@@ -18,13 +18,13 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
 
     private final NoticeRepository noticeRepository;
 
-    private final int SIZE = 7;
+    private final int SIZE = 10;
 
     public Page<NoticeResponseSimpleDto> getNotices(int page, String keyword) {
         if (page < 0) {
             throw new GeneralException(ErrorStatus.INVALID_PAGE_NUMBER);
         }
-        PageRequest pageRequest = PageRequest.of(page, SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(page, SIZE, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<Notice> notices = noticeRepository.findByTitleContainingIgnoreCase(keyword, pageRequest);
 
