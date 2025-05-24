@@ -19,20 +19,20 @@ public class StoreCustomRepositoryImpl implements StoreCustomRepository{
 
     @Override
     public Page<StoreListResponseDto> searchStores(StoreSearchRequestDto request, Pageable pageable) {
-        StringBuilder countJpql = new StringBuilder("SELECT COUNT(s) FROM Store s JOIN s.region r JOIN s.merchant m WHERE 1=1");
-        StringBuilder jpql = new StringBuilder("SELECT s FROM Store s JOIN s.region r JOIN s.merchant m WHERE 1=1");
+        StringBuilder countJpql = new StringBuilder("SELECT COUNT(s) FROM Store s JOIN s.region r WHERE 1=1");
+        StringBuilder jpql = new StringBuilder("SELECT s FROM Store s JOIN s.region r WHERE 1=1");
 
-        if (StringUtils.hasText(request.sidoName())) {
+        if (StringUtils.hasText(request.sidoName()) && !"all".equalsIgnoreCase(request.sidoName())) {
             countJpql.append(" AND r.sidoName = :sidoName");
             jpql.append(" AND r.sidoName = :sidoName");
         }
 
-        if (StringUtils.hasText(request.sigunguName())) {
+        if (StringUtils.hasText(request.sigunguName()) && !"all".equalsIgnoreCase(request.sigunguName())) {
             countJpql.append(" AND r.sigunguName = :sigunguName");
             jpql.append(" AND r.sigunguName = :sigunguName");
         }
 
-        if (request.storeCategory() != null) {
+        if (request.storeCategory() != null && !"all".equalsIgnoreCase(request.storeCategory().name())) {
             countJpql.append(" AND s.storeCategory = :storeCategory");
             jpql.append(" AND s.storeCategory = :storeCategory");
         }
@@ -45,17 +45,17 @@ public class StoreCustomRepositoryImpl implements StoreCustomRepository{
         TypedQuery<Long> countQuery = em.createQuery(countJpql.toString(), Long.class);
         TypedQuery<Store> query = em.createQuery(jpql.toString(), Store.class);
 
-        if (StringUtils.hasText(request.sidoName())) {
+        if (StringUtils.hasText(request.sidoName()) && !"all".equalsIgnoreCase(request.sidoName())) {
             countQuery.setParameter("sidoName", request.sidoName());
             query.setParameter("sidoName", request.sidoName());
         }
 
-        if (StringUtils.hasText(request.sigunguName())) {
+        if (StringUtils.hasText(request.sigunguName()) && !"all".equalsIgnoreCase(request.sigunguName())) {
             countQuery.setParameter("sigunguName", request.sigunguName());
             query.setParameter("sigunguName", request.sigunguName());
         }
 
-        if (request.storeCategory() != null) {
+        if (request.storeCategory() != null && !"all".equalsIgnoreCase(request.storeCategory().name())) {
             countQuery.setParameter("storeCategory", request.storeCategory());
             query.setParameter("storeCategory", request.storeCategory());
         }
