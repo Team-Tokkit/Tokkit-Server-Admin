@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
 
@@ -23,6 +24,17 @@ public class S3Controller {
     ) {
         URL url = s3Service.generatePresignedUrl(fileName, contentType);
         return ResponseEntity.ok(url.toString());
+    }
+
+    // 이미지 업로드 API
+    @PostMapping("/upload/{fileName}")
+    public ResponseEntity<String> uploadImage(@PathVariable String fileName, @RequestParam MultipartFile file) {
+        try {
+            String imageUrl = s3Service.uploadImage(fileName, file);
+            return ResponseEntity.ok(imageUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to upload file: " + e.getMessage());
+        }
     }
 
     // S3에서 이미지를 가져오는 API

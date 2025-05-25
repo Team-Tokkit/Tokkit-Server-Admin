@@ -4,6 +4,7 @@ import dev.admin.global.apiPayload.code.status.ErrorStatus;
 import dev.admin.global.apiPayload.exception.GeneralException;
 import dev.admin.global.entity.VoucherImage;
 import dev.admin.global.entity.VoucherStore;
+import dev.admin.merchant.entity.Merchant;
 import dev.admin.store.entity.Store;
 import dev.admin.store.repository.StoreRepository;
 import dev.admin.voucher.dto.request.CreateVoucherRequestDto;
@@ -27,11 +28,12 @@ public class VoucherCommandServiceImpl implements VoucherCommandService {
     @Override
     @Transactional
     public void createVoucher(CreateVoucherRequestDto requestDto) {
-
         Voucher voucher = requestDto.toEntity();
 
         List<Store> stores = storeRepository.findAllById(requestDto.storeIds());
         for (Store store : stores) {
+            Merchant merchant = store.getMerchant();
+            voucher.setMerchant(merchant);
             VoucherStore voucherStore = VoucherStore.builder()
                     .voucher(voucher)
                     .store(store)

@@ -86,6 +86,9 @@ public class Voucher extends BaseTimeEntity {
         this.contact = contact;
     }
 
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
 
 
 }
