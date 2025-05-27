@@ -20,6 +20,12 @@ jobs:
           mkdir -p src/main/resources
           echo "${{ secrets.APP_YML }}" > src/main/resources/application.yml
 
+      - name: Grant execute permission to Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Build Spring Boot app (JAR)
+        run: ./gradlew build --no-daemon
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
