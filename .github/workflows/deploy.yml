@@ -56,3 +56,4 @@ jobs:
               --memory=512m \
               --restart always \
               ${{ secrets.DOCKER_USERNAME }}/tokkit-server-admin:latest
+
