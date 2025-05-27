@@ -47,7 +47,7 @@ jobs:
 
       - name: Build & Push Docker Image to ECR
         run: |
-          IMAGE_URI=233777023703.dkr.ecr.ap-northeast-2.amazonaws.com/tokkit-server
+          IMAGE_URI=233777023703.dkr.ecr.ap-northeast-2.amazonaws.com/tokkit-server-admin
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
 
