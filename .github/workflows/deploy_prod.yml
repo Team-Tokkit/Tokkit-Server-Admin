@@ -58,3 +58,4 @@ jobs:
             --deployment-group-name tokkit-server-admin-bluegreen \
             --s3-location bucket=tokkit-codedeploy-bucket,key=deployments/app-server-admin.zip,bundleType=zip \
             --region ap-northeast-2
+          
