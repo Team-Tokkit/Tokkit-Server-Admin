@@ -11,8 +11,8 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class CorsConfig {
 
-	private static final String SERVER_URL = "https://xxxxx";
-	private static final String FRONT_URL = "https://xxxxx";
+	private static final String SERVER_URL = "https://admin.tokkit.site";
+	private static final String USER_SERVER_URL = "https://www.tokkit.site";
 	private static final String FRONT_LOCALHOST_URL = "http://localhost:3000";
 	private static final String SERVER_LOCALHOST_URL = "http://localhost:8080";
 
@@ -23,7 +23,7 @@ public class CorsConfig {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
 		config.addAllowedOrigin(SERVER_URL);
-		config.addAllowedOrigin(FRONT_URL);
+		config.addAllowedOrigin(USER_SERVER_URL);
 		config.addAllowedOrigin(FRONT_LOCALHOST_URL);
 		config.addAllowedOrigin(SERVER_LOCALHOST_URL);
 		config.addAllowedHeader("*");
