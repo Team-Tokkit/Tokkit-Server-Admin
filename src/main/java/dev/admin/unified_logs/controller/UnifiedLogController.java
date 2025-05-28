@@ -1,5 +1,6 @@
 package dev.admin.unified_logs.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,8 +32,8 @@ public class UnifiedLogController {
 		@RequestParam(required = false) Long userId,
 		@RequestParam(required = false) Long merchantId,
 		@RequestParam(required = false) List<String> logTypes,
-		@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-		@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to,
+		@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+		@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
 		@PageableDefault(size = 20, sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable
 	) {
 		UnifiedLogFilterRequest filter = new UnifiedLogFilterRequest(traceId, userId, merchantId, logTypes, from, to);

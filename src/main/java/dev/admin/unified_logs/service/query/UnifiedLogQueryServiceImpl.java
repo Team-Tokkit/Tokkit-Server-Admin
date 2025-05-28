@@ -67,8 +67,18 @@ public class UnifiedLogQueryServiceImpl implements UnifiedLogQueryService {
 		if (filter.traceId() != null) match &= filter.traceId().equals(traceId);
 		if (filter.userId() != null) match &= filter.userId().equals(userId);
 		if (filter.merchantId() != null) match &= filter.merchantId().equals(merchantId);
-		if (filter.from() != null) match &= !timestamp.isBefore(filter.from());
-		if (filter.to() != null) match &= !timestamp.isAfter(filter.to());
+
+		if (filter.from() != null) {
+			LocalDateTime fromDateTime = filter.from().atStartOfDay();
+			match &= !timestamp.isBefore(fromDateTime);
+		}
+
+		if (filter.to() != null) {
+			LocalDateTime toDateTime = filter.to().plusDays(1).atStartOfDay().minusNanos(1);
+			match &= !timestamp.isAfter(toDateTime);
+		}
+
 		return match;
 	}
+
 }

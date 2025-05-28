@@ -1,5 +1,6 @@
 package dev.admin.unified_logs.dto.request;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public record UnifiedLogFilterRequest(
 	List<String> logTypes,
 
 	@Schema(description = "조회 시작 시간 (ISO 8601)")
-	LocalDateTime from,
+	LocalDate from,
 
 	@Schema(description = "조회 종료 시간 (ISO 8601)")
-	LocalDateTime to
+	LocalDate to
 ) {}
