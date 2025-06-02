@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AdminLoginCommandService {
+public class AdminAuthCommandService {
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
@@ -42,5 +42,14 @@ public class AdminLoginCommandService {
         return new JwtDto(accessToken, refreshToken);
     }
 
+    /**
+     * 로그아웃: refreshToken 삭제
+     */
+    public void logout(String refreshToken) {
+        // 저장소에 토큰이 존재할 때만 삭제
+        if (tokenRepository.exists(refreshToken)) {
+            tokenRepository.delete(refreshToken);
+        }
+    }
 
 }

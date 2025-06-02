@@ -4,9 +4,9 @@ import dev.admin.admin.dto.request.LoginRequestDto;
 import dev.admin.admin.dto.response.AdminInfoResponse;
 import dev.admin.admin.dto.response.JwtDto;
 import dev.admin.admin.dto.response.JwtPayload;
-import dev.admin.admin.service.command.AdminLoginCommandService;
-import dev.admin.admin.service.command.AdminLogoutCommandService;
+import dev.admin.admin.service.command.AdminAuthCommandService;
 import dev.admin.admin.utils.JwtUtil;
+import dev.admin.global.apiPayload.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
@@ -18,13 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminAuthController {
 
-    private final AdminLoginCommandService adminLoginCommandService;
-    private final AdminLogoutCommandService adminLogoutCommandService;
+    private final AdminAuthCommandService authCommandService;
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
-        JwtDto tokenDto = adminLoginCommandService.login(requestDto);
+    public ResponseEntity<ApiResponse<JwtDto>> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+        JwtDto tokenDto = authCommandService.login(requestDto);
 
         // 쿠키 설정은 그대로 유지
         ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", tokenDto.getAccessToken())
@@ -47,14 +46,14 @@ public class AdminAuthController {
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         // ✅ 응답 바디에 토큰도 포함
-        return ResponseEntity.ok(tokenDto);
+        return ResponseEntity.ok(ApiResponse.onSuccess(tokenDto));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@CookieValue("refreshToken") String refreshToken,
+    public ResponseEntity<ApiResponse<Void>> logout(@CookieValue("refreshToken") String refreshToken,
                                        HttpServletResponse response) {
         // 서비스 호출: refreshToken 기반 로그아웃 처리 (DB/Redis 삭제 등)
-        adminLogoutCommandService.logout(refreshToken);
+        authCommandService.logout(refreshToken);
 
         // accessToken & refreshToken 쿠키 삭제
         ResponseCookie clearAccessToken = ResponseCookie.from("accessToken", "")
@@ -76,20 +75,20 @@ public class AdminAuthController {
         response.addHeader("Set-Cookie", clearAccessToken.toString());
         response.addHeader("Set-Cookie", clearRefreshToken.toString());
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<AdminInfoResponse> me(@CookieValue("accessToken") String accessToken) {
+    public ResponseEntity<ApiResponse<AdminInfoResponse>> me(@CookieValue("accessToken") String accessToken) {
         JwtPayload payload = jwtUtil.parseToken(accessToken);
-        return ResponseEntity.ok(
-                new AdminInfoResponse(
-                        payload.getSub(),
-                        payload.getEmail(),
-                        payload.getName(),
-                        payload.getRole()
-                )
-        );
-    }
 
+        AdminInfoResponse info = new AdminInfoResponse(
+                payload.getSub(),
+                payload.getEmail(),
+                payload.getName(),
+                payload.getRole()
+        );
+
+        return ResponseEntity.ok(ApiResponse.onSuccess(info));
+    }
 }
