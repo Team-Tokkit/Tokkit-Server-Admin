@@ -34,8 +34,13 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/login", "/admin/logout").permitAll()
-                        .requestMatchers("/admin/me", "/admin-api/**").authenticated()
+                        .requestMatchers(
+                                "/admin/login",
+                                "/admin/logout",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()                        .requestMatchers("/admin/me", "/admin-api/**").authenticated()
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
