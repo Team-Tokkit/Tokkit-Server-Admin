@@ -37,12 +37,12 @@ public class SecurityConfig {
                         .requestMatchers("/test/**").permitAll() // ✅ 여기를 추가!
 
                         .requestMatchers(
-                                "/admin/login",
-                                "/admin/logout",
+                                "/admin-api/login",
+                                "/admin-api/logout",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
-                        ).permitAll()                        .requestMatchers("/admin/me", "/admin-api/**").authenticated()
+                        ).permitAll()                        .requestMatchers("/admin-api/me", "/admin-api/**").authenticated()
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
