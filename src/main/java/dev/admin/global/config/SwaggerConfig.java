@@ -43,6 +43,9 @@ public class SwaggerConfig {
         Server localServer = new Server()
                 .url("http://localhost:8080")
                 .description("Local development server");
+        Server prodServer = new Server()
+                .url("https://api.tokkit.site:8080")
+                .description("Local development server");
 
         return new OpenAPI()
                 .components(new Components()
@@ -53,6 +56,6 @@ public class SwaggerConfig {
                         .title("토킷(TOKKIT) ADMIN API 명세서")
                         .description("토킷(TOKKIT) ADMIN API 명세서입니다.")
                         .version("1.0.0"))
-                .servers(List.of(defaultServer, localServer));
+                .servers(List.of(defaultServer, localServer,prodServer));
     }
 }
