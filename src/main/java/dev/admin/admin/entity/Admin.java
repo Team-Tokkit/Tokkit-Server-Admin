@@ -3,6 +3,8 @@ package dev.admin.admin.entity;
 import dev.admin.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import dev.admin.admin.entity.Role;
+
 
 @Entity
 @Getter
@@ -20,4 +22,12 @@ public class Admin extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
 }
