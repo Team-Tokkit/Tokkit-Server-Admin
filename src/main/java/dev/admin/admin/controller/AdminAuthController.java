@@ -22,10 +22,9 @@ public class AdminAuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<JwtDto>> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+    public ApiResponse<JwtDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
         JwtDto tokenDto = authCommandService.login(requestDto);
 
-        // 쿠키 설정은 그대로 유지
         ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", tokenDto.getAccessToken())
                 .httpOnly(true)
                 .secure(false)
@@ -45,17 +44,14 @@ public class AdminAuthController {
         response.addHeader("Set-Cookie", accessTokenCookie.toString());
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
-        // ✅ 응답 바디에 토큰도 포함
-        return ResponseEntity.ok(ApiResponse.onSuccess(tokenDto));
+        return ApiResponse.onSuccess(tokenDto);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(@CookieValue("refreshToken") String refreshToken,
+    public ApiResponse<Void> logout(@CookieValue("refreshToken") String refreshToken,
                                        HttpServletResponse response) {
-        // 서비스 호출: refreshToken 기반 로그아웃 처리 (DB/Redis 삭제 등)
         authCommandService.logout(refreshToken);
 
-        // accessToken & refreshToken 쿠키 삭제
         ResponseCookie clearAccessToken = ResponseCookie.from("accessToken", "")
                 .httpOnly(true)
                 .secure(false)
@@ -75,11 +71,11 @@ public class AdminAuthController {
         response.addHeader("Set-Cookie", clearAccessToken.toString());
         response.addHeader("Set-Cookie", clearRefreshToken.toString());
 
-        return ResponseEntity.ok(ApiResponse.onSuccess(null));
+        return ApiResponse.onSuccess(null);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<AdminInfoResponse>> me(@CookieValue("accessToken") String accessToken) {
+    public ApiResponse<AdminInfoResponse> me(@CookieValue("accessToken") String accessToken) {
         JwtPayload payload = jwtUtil.parseToken(accessToken);
 
         AdminInfoResponse info = new AdminInfoResponse(
@@ -89,6 +85,6 @@ public class AdminAuthController {
                 payload.getRole()
         );
 
-        return ResponseEntity.ok(ApiResponse.onSuccess(info));
+        return ApiResponse.onSuccess(info);
     }
 }
