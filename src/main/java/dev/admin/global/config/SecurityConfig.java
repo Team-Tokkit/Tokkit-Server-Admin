@@ -34,15 +34,16 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/test/**").permitAll() // ✅ 여기를 추가!
+                        .requestMatchers("/admin-api/health").permitAll() // ✅ 여기를 추가!
 
                         .requestMatchers(
                                 "/admin-api/login",
                                 "/admin-api/logout",
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**"
-                        ).permitAll()                        .requestMatchers("/admin-api/me", "/admin-api/**").authenticated()
+                                "/admin-api/swagger-ui.html",
+                                "/admin-api/swagger-ui/**",
+                                "/admin-api/v3/api-docs/**"
+                        ).permitAll()
+                        .requestMatchers("/admin-api/me", "/admin-api/**").authenticated()
                         .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
