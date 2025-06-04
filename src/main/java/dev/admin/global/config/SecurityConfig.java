@@ -34,6 +34,8 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/test/**").permitAll() // ✅ 여기를 추가!
+
                         .requestMatchers(
                                 "/admin/login",
                                 "/admin/logout",

@@ -1,8 +1,10 @@
 package dev.admin.admin.repository;
 
+import java.util.Optional;
+
 public interface TokenRepository {
-    void save(String email, String refreshToken);
-    boolean exists(String refreshToken);
-    void delete(String refreshToken);
-    String findByEmail(String email); // 로그인 시에도 사용되므로 유지
+    void save(String key, String value);
+    Optional<String> find(String key);
+    void delete(String key);
+    boolean exists(String key);
 }

@@ -58,7 +58,7 @@ public class AdminAuthController {
         // accessToken & refreshToken 쿠키 삭제
         ResponseCookie clearAccessToken = ResponseCookie.from("accessToken", "")
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(0)
                 .sameSite("Lax")
@@ -66,7 +66,7 @@ public class AdminAuthController {
 
         ResponseCookie clearRefreshToken = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(0)
                 .sameSite("Lax")

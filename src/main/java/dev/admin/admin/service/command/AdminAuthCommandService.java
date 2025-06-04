@@ -37,7 +37,8 @@ public class AdminAuthCommandService {
         );
 
         String refreshToken = jwtUtil.generateRefreshToken();
-        tokenRepository.save(admin.getEmail(), refreshToken);
+
+        tokenRepository.save(admin.getEmail() + "_refreshToken", refreshToken); // refreshToken 저장
 
         return new JwtDto(accessToken, refreshToken);
     }
@@ -46,10 +47,19 @@ public class AdminAuthCommandService {
      * 로그아웃: refreshToken 삭제
      */
     public void logout(String refreshToken) {
-        // 저장소에 토큰이 존재할 때만 삭제
-        if (tokenRepository.exists(refreshToken)) {
-            tokenRepository.delete(refreshToken);
+        // Redis에서 RefreshToken 삭제
+        String redisRefreshKey = "refresh:" + refreshToken;
+        if (tokenRepository.exists(redisRefreshKey)) {
+            tokenRepository.delete(redisRefreshKey);
+        }
+
+        // 이메일 추출
+        String email = jwtUtil.getEmailFromToken(refreshToken);
+
+        // 그러나 원하면 Redis에서 직접 삭제할 수 있음 (Access Token을 Redis에 저장한 경우)
+        String redisAccessKey = email + "_accessToken";
+        if (tokenRepository.exists(redisAccessKey)) {
+            tokenRepository.delete(redisAccessKey);  // Redis에서 AccessToken 삭제
         }
     }
-
 }
