@@ -13,6 +13,7 @@ public class CorsConfig {
 
 	private static final String SERVER_URL = "https://admin.tokkit.site";
 	private static final String USER_SERVER_URL = "https://www.tokkit.site";
+
 	private static final String API_SERVER_URL = "https://api.tokkit.site";
 	private static final String FRONT_LOCALHOST_URL = "http://localhost:3000";
 	private static final String SERVER_LOCALHOST_URL = "http://localhost:8080";
