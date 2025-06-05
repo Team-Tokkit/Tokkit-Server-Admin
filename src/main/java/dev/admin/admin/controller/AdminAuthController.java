@@ -10,6 +10,7 @@ import dev.admin.global.apiPayload.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value; // 이 import가 필요합니다.
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,9 @@ public class AdminAuthController {
 	private final AdminAuthCommandService authCommandService;
 	private final JwtUtil jwtUtil;
 
+	@Value("${app.cookie.domain}") // 설정 파일에서 app.cookie.domain 값을 읽어옵니다.
+	private String cookieDomain;
+
 	@PostMapping("/login")
 	public ApiResponse<JwtDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
 		JwtDto tokenDto = authCommandService.login(requestDto);
@@ -30,6 +34,7 @@ public class AdminAuthController {
 			.httpOnly(true)
 			.secure(true)
 			.path("/")
+			.domain(cookieDomain) // 설정 파일에서 읽어온 도메인 값을 설정합니다.
 			.sameSite("None")
 			.maxAge(60 * 60)
 			.build();
@@ -38,6 +43,7 @@ public class AdminAuthController {
 			.httpOnly(true)
 			.secure(true)
 			.path("/")
+			.domain(cookieDomain) // refreshToken도 동일하게 설정
 			.sameSite("None")
 			.maxAge(7 * 24 * 60 * 60)
 			.build();
@@ -57,6 +63,7 @@ public class AdminAuthController {
 			.httpOnly(true)
 			.secure(true)
 			.path("/")
+			.domain(cookieDomain) // 로그아웃 시에도 도메인을 지정해야 삭제가 정확히 됩니다.
 			.sameSite("None")
 			.maxAge(0)
 			.build();
@@ -65,6 +72,7 @@ public class AdminAuthController {
 			.httpOnly(true)
 			.secure(true)
 			.path("/")
+			.domain(cookieDomain) // 로그아웃 시에도 도메인을 지정해야 삭제가 정확히 됩니다.
 			.sameSite("None")
 			.maxAge(0)
 			.build();
