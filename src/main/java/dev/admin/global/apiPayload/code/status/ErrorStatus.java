@@ -49,7 +49,8 @@ public enum ErrorStatus implements BaseErrorCode {
 	// Transaction
 	TRANSACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "TRANSACTION_404", "트랜잭션을 찾을 수 없습니다"),
 	// LOGIN LOG
-	LOGIN_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "LOGIN_LOG_404","로그인 로그를 찾을 수 없습니다" );
+	LOGIN_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "LOGIN_LOG_404","로그인 로그를 찾을 수 없습니다" ),
+	ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND,"ADMIN_LOG_404","로그인 실패! \n 관리자를 찾을 수 없습니다." );
 
 
 	private final HttpStatus httpStatus;

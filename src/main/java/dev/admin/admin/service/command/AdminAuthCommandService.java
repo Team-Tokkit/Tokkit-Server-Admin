@@ -23,7 +23,7 @@ public class AdminAuthCommandService {
 
     public JwtDto login(LoginRequestDto requestDto) {
         Admin admin = adminRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다."));
+            .orElseThrow(() -> new GeneralException(ErrorStatus.ADMIN_NOT_FOUND));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), admin.getPassword())) {
             throw new GeneralException(ErrorStatus.INVALID_PASSWORD);
