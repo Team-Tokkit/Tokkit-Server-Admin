@@ -9,6 +9,10 @@ import dev.admin.admin.utils.JwtUtil;
 import dev.admin.global.apiPayload.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
+
+import org.springframework.beans.factory.annotation.Value; 
+
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,73 +22,83 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminAuthController {
 
-    private final AdminAuthCommandService authCommandService;
-    private final JwtUtil jwtUtil;
+	private final AdminAuthCommandService authCommandService;
+	private final JwtUtil jwtUtil;
 
-    @PostMapping("/login")
-    public ApiResponse<JwtDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
-        JwtDto tokenDto = authCommandService.login(requestDto);
 
-        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", tokenDto.getAccessToken())
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(60 * 60)
-                .build();
+	@Value("${app.cookie.domain}") 
+	private String cookieDomain;
 
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(7 * 24 * 60 * 60)
-                .build();
 
-        response.addHeader("Set-Cookie", accessTokenCookie.toString());
-        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
+	@PostMapping("/login")
+	public ApiResponse<JwtDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+		JwtDto tokenDto = authCommandService.login(requestDto);
 
-        return ApiResponse.onSuccess(tokenDto);
-    }
+		ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", tokenDto.getAccessToken())
+			.httpOnly(true)
+			.secure(true)
+			.path("/")
+			.domain(cookieDomain) 
+			.sameSite("None")
+			.maxAge(60 * 60)
+			.build();
 
-    @PostMapping("/logout")
-    public ApiResponse<Void> logout(@CookieValue("refreshToken") String refreshToken,
-                                       HttpServletResponse response) {
-        authCommandService.logout(refreshToken);
+		ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+			.httpOnly(true)
+			.secure(true)
+			.path("/")
+			.domain(cookieDomain) 
+			.sameSite("None")
+			.maxAge(7 * 24 * 60 * 60)
+			.build();
 
-        ResponseCookie clearAccessToken = ResponseCookie.from("accessToken", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(0)
-                .sameSite("Lax")
-                .build();
+		response.addHeader("Set-Cookie", accessTokenCookie.toString());
+		response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
-        ResponseCookie clearRefreshToken = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(0)
-                .sameSite("Lax")
-                .build();
+		return ApiResponse.onSuccess(tokenDto);
+	}
 
-        response.addHeader("Set-Cookie", clearAccessToken.toString());
-        response.addHeader("Set-Cookie", clearRefreshToken.toString());
+	@PostMapping("/logout")
+	public ApiResponse<Void> logout(@CookieValue("refreshToken") String refreshToken,
+		HttpServletResponse response) {
+		authCommandService.logout(refreshToken);
 
-        return ApiResponse.onSuccess(null);
-    }
+		ResponseCookie clearAccessToken = ResponseCookie.from("accessToken", "")
+			.httpOnly(true)
+			.secure(true)
+			.path("/")
+			.domain(cookieDomain) 
+			.sameSite("None")
+			.maxAge(0)
+			.build();
 
-    @GetMapping("/me")
-    public ApiResponse<AdminInfoResponse> me(@CookieValue("accessToken") String accessToken) {
-        JwtPayload payload = jwtUtil.parseToken(accessToken);
+		ResponseCookie clearRefreshToken = ResponseCookie.from("refreshToken", "")
+			.httpOnly(true)
+			.secure(true)
+			.path("/")
+			.domain(cookieDomain) 
+			.sameSite("None")
+			.maxAge(0)
+			.build();
 
-        AdminInfoResponse info = new AdminInfoResponse(
-                payload.getSub(),
-                payload.getEmail(),
-                payload.getName(),
-                payload.getRole()
-        );
 
-        return ApiResponse.onSuccess(info);
-    }
+		response.addHeader("Set-Cookie", clearAccessToken.toString());
+		response.addHeader("Set-Cookie", clearRefreshToken.toString());
+
+		return ApiResponse.onSuccess(null);
+	}
+
+	@GetMapping("/me")
+	public ApiResponse<AdminInfoResponse> me(@CookieValue("accessToken") String accessToken) {
+		JwtPayload payload = jwtUtil.parseToken(accessToken);
+
+		AdminInfoResponse info = new AdminInfoResponse(
+			payload.getSub(),
+			payload.getEmail(),
+			payload.getName(),
+			payload.getRole()
+		);
+
+		return ApiResponse.onSuccess(info);
+	}
 }
