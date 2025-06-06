@@ -9,6 +9,8 @@ import dev.admin.admin.utils.JwtUtil;
 import dev.admin.global.apiPayload.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value; // 이 import가 필요합니다.
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,73 +20,81 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminAuthController {
 
-    private final AdminAuthCommandService authCommandService;
-    private final JwtUtil jwtUtil;
+	private final AdminAuthCommandService authCommandService;
+	private final JwtUtil jwtUtil;
 
-    @PostMapping("/login")
-    public ApiResponse<JwtDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
-        JwtDto tokenDto = authCommandService.login(requestDto);
+	@Value("${app.cookie.domain}") // 설정 파일에서 app.cookie.domain 값을 읽어옵니다.
+	private String cookieDomain;
 
-        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", tokenDto.getAccessToken())
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(60 * 60)
-                .build();
+	@PostMapping("/login")
+	public ApiResponse<JwtDto> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+		JwtDto tokenDto = authCommandService.login(requestDto);
 
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .sameSite("Lax")
-                .maxAge(7 * 24 * 60 * 60)
-                .build();
+		ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", tokenDto.getAccessToken())
+			.httpOnly(true)
+			.secure(true)
+			.path("/")
+			.domain(cookieDomain) // 설정 파일에서 읽어온 도메인 값을 설정합니다.
+			.sameSite("None")
+			.maxAge(60 * 60)
+			.build();
 
-        response.addHeader("Set-Cookie", accessTokenCookie.toString());
-        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
+		ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+			.httpOnly(true)
+			.secure(true)
+			.path("/")
+			.domain(cookieDomain) // refreshToken도 동일하게 설정
+			.sameSite("None")
+			.maxAge(7 * 24 * 60 * 60)
+			.build();
 
-        return ApiResponse.onSuccess(tokenDto);
-    }
+		response.addHeader("Set-Cookie", accessTokenCookie.toString());
+		response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
-    @PostMapping("/logout")
-    public ApiResponse<Void> logout(@CookieValue("refreshToken") String refreshToken,
-                                       HttpServletResponse response) {
-        authCommandService.logout(refreshToken);
+		return ApiResponse.onSuccess(tokenDto);
+	}
 
-        ResponseCookie clearAccessToken = ResponseCookie.from("accessToken", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(0)
-                .sameSite("Lax")
-                .build();
+	@PostMapping("/logout")
+	public ApiResponse<Void> logout(@CookieValue("refreshToken") String refreshToken,
+		HttpServletResponse response) {
+		authCommandService.logout(refreshToken);
 
-        ResponseCookie clearRefreshToken = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(0)
-                .sameSite("Lax")
-                .build();
+		ResponseCookie clearAccessToken = ResponseCookie.from("accessToken", "")
+			.httpOnly(true)
+			.secure(true)
+			.path("/")
+			.domain(cookieDomain) // 로그아웃 시에도 도메인을 지정해야 삭제가 정확히 됩니다.
+			.sameSite("None")
+			.maxAge(0)
+			.build();
 
-        response.addHeader("Set-Cookie", clearAccessToken.toString());
-        response.addHeader("Set-Cookie", clearRefreshToken.toString());
+		ResponseCookie clearRefreshToken = ResponseCookie.from("refreshToken", "")
+			.httpOnly(true)
+			.secure(true)
+			.path("/")
+			.domain(cookieDomain) // 로그아웃 시에도 도메인을 지정해야 삭제가 정확히 됩니다.
+			.sameSite("None")
+			.maxAge(0)
+			.build();
 
-        return ApiResponse.onSuccess(null);
-    }
 
-    @GetMapping("/me")
-    public ApiResponse<AdminInfoResponse> me(@CookieValue("accessToken") String accessToken) {
-        JwtPayload payload = jwtUtil.parseToken(accessToken);
+		response.addHeader("Set-Cookie", clearAccessToken.toString());
+		response.addHeader("Set-Cookie", clearRefreshToken.toString());
 
-        AdminInfoResponse info = new AdminInfoResponse(
-                payload.getSub(),
-                payload.getEmail(),
-                payload.getName(),
-                payload.getRole()
-        );
+		return ApiResponse.onSuccess(null);
+	}
 
-        return ApiResponse.onSuccess(info);
-    }
+	@GetMapping("/me")
+	public ApiResponse<AdminInfoResponse> me(@CookieValue("accessToken") String accessToken) {
+		JwtPayload payload = jwtUtil.parseToken(accessToken);
+
+		AdminInfoResponse info = new AdminInfoResponse(
+			payload.getSub(),
+			payload.getEmail(),
+			payload.getName(),
+			payload.getRole()
+		);
+
+		return ApiResponse.onSuccess(info);
+	}
 }
