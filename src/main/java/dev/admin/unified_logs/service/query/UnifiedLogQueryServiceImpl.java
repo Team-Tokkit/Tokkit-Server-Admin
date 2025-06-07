@@ -28,17 +28,12 @@ public class UnifiedLogQueryServiceImpl implements UnifiedLogQueryService {
 
 	@Override
 	public Page<UnifiedLogResponseDto> getLogs(UnifiedLogFilterRequest filter, Pageable pageable) {
-		Page<UnifiedLog> logs = unifiedLogRepository.findAll(pageable); // 필터링은 예시이며 조건에 따라 직접 JPQL 추가 가능
-		List<UnifiedLogResponseDto> dtos = logs.stream()
-				.filter(log -> matchesFilter(log, filter))
-				.map(UnifiedLogResponseDto::from)
-				.sorted(Comparator.comparing(UnifiedLogResponseDto::timestamp).reversed())
-				.toList();
-
-		int start = (int) pageable.getOffset();
-		int end = Math.min(start + pageable.getPageSize(), dtos.size());
-		List<UnifiedLogResponseDto> pageContent = dtos.subList(start, end);
-		return new PageImpl<>(pageContent, pageable, dtos.size());
+		if (filter.traceId() != null) {
+			return unifiedLogRepository.findByTraceId(filter.traceId(), pageable)
+					.map(UnifiedLogResponseDto::from);
+		}
+		return unifiedLogRepository.findAll(pageable)
+				.map(UnifiedLogResponseDto::from);
 	}
 
 	private boolean matchesFilter(UnifiedLog log, UnifiedLogFilterRequest filter) {

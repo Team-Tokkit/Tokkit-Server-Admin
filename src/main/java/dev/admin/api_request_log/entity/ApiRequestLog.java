@@ -14,6 +14,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(indexes = {
+        @Index(name = "idx_api_request_log_timestamp", columnList = "timestamp"),
+        @Index(name = "idx_api_request_log_method_endpoint", columnList = "method, endpoint"),
+        @Index(name = "idx_api_request_log_trace_id", columnList = "traceId")
+})
 public class ApiRequestLog extends BaseTimeEntity {
 
     @Id
