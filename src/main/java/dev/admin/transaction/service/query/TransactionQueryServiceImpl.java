@@ -31,11 +31,10 @@ public class TransactionQueryServiceImpl implements TransactionQueryService {
             throw new GeneralException(ErrorStatus.INVALID_PAGE_NUMBER);
         }
         return repository.searchByCondition(
-                        condition.type(),
-                        condition.status(),
-                        condition.walletId(),
-                        pageable
-                )
+                condition.type(),
+                condition.status(),
+                condition.walletId(),
+                pageable)
                 .map(TransactionSimpleResponseDto::from);
     }
 }

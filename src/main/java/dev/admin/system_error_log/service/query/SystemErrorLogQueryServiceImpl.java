@@ -31,7 +31,6 @@ public class SystemErrorLogQueryServiceImpl implements SystemErrorLogQueryServic
         return repository.searchByCondition(
                 condition.keyword(),
                 condition.severity(),
-                pageable
-        ).map(SystemErrorLogSimpleResponseDto::from);
+                pageable).map(SystemErrorLogSimpleResponseDto::from);
     }
 }

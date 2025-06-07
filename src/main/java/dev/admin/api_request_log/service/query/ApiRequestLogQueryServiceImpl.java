@@ -22,7 +22,8 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
     private final ApiRequestLogRepository logRepository;
 
     @Override
-    public List<ApiRequestLogChartResponseDto> getChartData(String startDate, String endDate, String method, Integer status, String keyword) {
+    public List<ApiRequestLogChartResponseDto> getChartData(String startDate, String endDate, String method,
+            Integer status, String keyword) {
 
         LocalDateTime start = DateTimeUtil.parseStartOfDay(startDate);
         LocalDateTime end = DateTimeUtil.parseEndOfDay(endDate);
@@ -37,8 +38,7 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
     @Override
     public ApiRequestLogPageResponseDto getPaginatedLogs(
             String startDate, String endDate, String method,
-            Integer status, String keyword, Pageable pageable
-    ) {
+            Integer status, String keyword, Pageable pageable) {
         LocalDateTime start = DateTimeUtil.parseStartOfDay(startDate);
         LocalDateTime end = DateTimeUtil.parseEndOfDay(endDate);
         DateTimeUtil.validateStartBeforeEnd(start, end);
@@ -55,8 +55,8 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
                         log.getResponseTimeMs(),
                         log.getUserId(),
                         log.getMerchantId(),
-                        log.getTimestamp()
-                ));
+                        log.getTimestamp(),
+                        log.getTraceId()));
 
         return ApiRequestLogPageResponseDto.from(page);
     }
@@ -68,7 +68,6 @@ public class ApiRequestLogQueryServiceImpl implements ApiRequestLogQueryService 
         }
         return ApiRequestLogDetailResponseDto.of(
                 logRepository.findById(id)
-                        .orElseThrow(() -> new GeneralException(ErrorStatus.API_REQUEST_LOG_NOT_FOUND))
-        );
+                        .orElseThrow(() -> new GeneralException(ErrorStatus.API_REQUEST_LOG_NOT_FOUND)));
     }
 }

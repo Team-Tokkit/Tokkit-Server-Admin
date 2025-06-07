@@ -35,7 +35,6 @@ public class LoginLogQueryServiceImpl implements LoginLogQueryService {
                 condition.merchantId(),
                 condition.success(),
                 condition.event(),
-                pageable
-        ).map(LoginLogSimpleResponseDto::from);
+                pageable).map(LoginLogSimpleResponseDto::from);
     }
 }

@@ -12,8 +12,8 @@ public record LoginLogSimpleResponseDto(
         String ipAddress,
         Event event,
         Boolean success,
-        LocalDateTime timestamp
-) {
+        LocalDateTime timestamp,
+        String traceId) {
     public static LoginLogSimpleResponseDto from(LoginLog log) {
         return new LoginLogSimpleResponseDto(
                 log.getId(),
@@ -22,7 +22,7 @@ public record LoginLogSimpleResponseDto(
                 log.getIpAddress(),
                 log.getEvent(),
                 log.getSuccess(),
-                log.getTimestamp()
-        );
+                log.getTimestamp(),
+                log.getTraceId());
     }
 }

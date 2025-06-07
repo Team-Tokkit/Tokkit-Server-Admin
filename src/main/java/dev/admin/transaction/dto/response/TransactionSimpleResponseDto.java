@@ -12,8 +12,8 @@ public record TransactionSimpleResponseDto(
         TransactionType type,
         TransactionStatus status,
         Long amount,
-        LocalDateTime createdAt
-) {
+        LocalDateTime createdAt,
+        String traceId) {
     public static TransactionSimpleResponseDto from(Transaction tx) {
         return new TransactionSimpleResponseDto(
                 tx.getId(),
@@ -21,7 +21,7 @@ public record TransactionSimpleResponseDto(
                 tx.getType(),
                 tx.getStatus(),
                 tx.getAmount(),
-                tx.getCreatedAt()
-        );
+                tx.getCreatedAt(),
+                tx.getTraceId());
     }
 }
